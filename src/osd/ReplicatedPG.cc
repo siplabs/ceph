@@ -7220,6 +7220,7 @@ void ReplicatedPG::process_copy_chunk(hobject_t oid, ceph_tid_t tid, int r)
     ObjectContextRef tempobc = get_object_context(cop->results.temp_oid, true);
     OpContextUPtr ctx = simple_opc_create(tempobc);
     if (cop->temp_cursor.is_initial()) {
+      ctx->op_t->create(cop->results.temp_oid);
       ctx->new_temp_oid = cop->results.temp_oid;
     }
     _write_copy_chunk(cop, ctx->op_t.get());
@@ -11514,6 +11515,7 @@ void ReplicatedPG::hit_set_persist()
   bufferlist boi(sizeof(ctx->new_obs.oi));
   ::encode(ctx->new_obs.oi, boi, get_osdmap()->get_up_osd_features());
 
+  ctx->op_t->create(oid);
   ctx->op_t->write(oid, 0, bl.length(), bl, 0);
   map <string, bufferlist> attrs;
   attrs[OI_ATTR].claim(boi);

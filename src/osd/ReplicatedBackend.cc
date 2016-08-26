@@ -357,9 +357,7 @@ void generate_transaction(
       }
 
       if (op.delete_first) {
-	if (op.delete_first) {
-	  t->remove(coll, goid);
-	}
+	t->remove(coll, goid);
       }
 
       match(
@@ -388,6 +386,7 @@ void generate_transaction(
 
       if (op.truncate)
 	t->truncate(coll, goid, *(op.truncate));
+
       if (!op.attr_updates.empty()) {
 	map<string, bufferlist> attrs;
 	for (auto &&p: op.attr_updates) {
@@ -398,10 +397,12 @@ void generate_transaction(
 	}
 	t->setattrs(coll, goid, attrs);
       }
+
       if (op.clear_omap)
 	t->omap_clear(coll, goid);
       if (op.omap_header)
 	t->omap_setheader(coll, goid, *(op.omap_header));
+
       for (auto &&up: op.omap_updates) {
 	using UpdateType = PGTransaction::ObjectOperation::OmapUpdateType;
 	switch (up.first) {
