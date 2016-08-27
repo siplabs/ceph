@@ -7220,7 +7220,6 @@ void ReplicatedPG::process_copy_chunk(hobject_t oid, ceph_tid_t tid, int r)
     ObjectContextRef tempobc = get_object_context(cop->results.temp_oid, true);
     OpContextUPtr ctx = simple_opc_create(tempobc);
     if (cop->temp_cursor.is_initial()) {
-      ctx->op_t->create(cop->results.temp_oid);
       ctx->new_temp_oid = cop->results.temp_oid;
     }
     _write_copy_chunk(cop, ctx->op_t.get());
